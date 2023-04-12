@@ -1,47 +1,32 @@
 name: Code junction build
-on: 
+on:
   push:
-    branches: 
+    branches:
       - master
   pull_request:
-    branches: 
+    branches:
       - master
 jobs:
   ubuntu-build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [12.x]
-
+        node-version:
+          - 12.x
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run build
-    - run: npm test
-      env:
-        CI: true
-  windows-build:
+      - uses: actions/checkout@v2
+      - name: Create folder
+        run: >
+          mkdir -p myNewFolder/myNewSubFolder && cp -R dist
+          myNewFolder/myNewSubFolder
 
-    runs-on: windows-latest
-
-    strategy:
-      matrix:
-        node-version: [12.x]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm install
-    - run: npm run build
-    - run: npm test
-      env:
-        CI: true
+          ls myNewFolder/MyNewSubFolder
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm run build
+      - run: npm test
+        env:
+          CI: true
